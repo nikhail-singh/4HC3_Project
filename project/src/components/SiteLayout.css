@@ -1,0 +1,30 @@
+.root {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    background: #f7f9fc;
+}
+
+.wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding-top: 64px;
+}
+
+.content-container {
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.content {
+    flex: 1 1 auto;
+    height: 100%;
+    overflow: auto;
+}
+
+.icon{
+    color: white;
+}

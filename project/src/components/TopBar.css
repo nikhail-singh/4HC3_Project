@@ -1,0 +1,24 @@
+.header{
+    flex-grow: 1;
+    height: 60px;
+    z-index: 1;
+    background: #7A003C !important;
+}
+
+.left{
+    flex-grow: 1;
+    height: 60px;
+}
+
+.right{
+    display: flex;
+    height: 60px;
+}
+
+.title{
+    margin-right: 10px !important;
+}
+
+.title-icon{
+    margin: 0px 8px 5px 0px;
+}
