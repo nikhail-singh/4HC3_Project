@@ -3,7 +3,7 @@ import TopBar from './TopBar';
 import Home from './Home';
 import Bookings from './Bookings';
 import BookRoom from './BookRoom';
-import Teams from './Teams';
+import Teams from './Teams/Teams';
 import './SiteLayout.css';
 import {
   BrowserRouter as Router,

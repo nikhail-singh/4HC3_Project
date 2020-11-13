@@ -1,0 +1,16 @@
+.member-card{
+    text-align: center;
+}
+
+.member-avatar{
+    height: 80px !important;
+    width: 80px !important;
+    margin-left: 28%;
+    margin-top: 10px;
+}
+
+.member-action{
+    background: #FDBF57 !important;
+    border: 1px solid black !important;
+    width: 50%;
+}

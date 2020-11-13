@@ -1,5 +1,5 @@
 import React from 'react';
-import './Bookings.css';
+import './BookRoom.css';
 import { Button } from '@material-ui/core';
 import { Link } from "react-router-dom";
 

@@ -1,0 +1,21 @@
+.role-card{
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    background: #C4C4C4 !important;
+}
+
+.role-header{
+    padding-left: 0px !important; 
+    color: #B22222;
+}
+
+.role-actions{
+    padding-top: 20px;
+    background: #C4C4C4;
+}
+
+.role-card-header{
+    padding: 10px 10px 0px 0px !important;
+}
