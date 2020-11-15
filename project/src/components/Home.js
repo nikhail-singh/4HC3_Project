@@ -1,14 +1,37 @@
 import React from 'react';
 import './Home.css';
-import { Drawer, Toolbar, List, ListItem, Avatar, ListItemText, Grid, Typography, Button, Divider } from '@material-ui/core';
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
+import { Drawer, 
+  Toolbar, 
+  List, 
+  ListItem, 
+  Avatar, 
+  ListItemText, 
+  Grid, 
+  Typography, 
+  Button, 
+  Divider,  
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogContentText, 
+  DialogActions, 
+  TextField,
+  Select,
+  InputLabel,
+  MenuItem } from '@material-ui/core';
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { format } from 'date-fns'
+import parse from 'date-fns/parse'
+import startOfWeek from 'date-fns/startOfWeek'
+import getDay from 'date-fns/getDay'
 import InfoEditPopup from './Teams/InfoEditPopup';
 import { shortName } from './Teams/Utils';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
+import { bookingDefaults } from '../data/bookingsSample';
+import DateFnsUtils from '@date-io/date-fns';
 
 const emptyTeam = {
   name: "",
@@ -17,7 +40,17 @@ const emptyTeam = {
   members: [],
 };
 
-const localizer = momentLocalizer(moment);
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+})
+
+const locales = { //use canadian time format
+  'en-Ca': require('date-fns/locale/en-Ca'),
+}
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -29,14 +62,41 @@ class Home extends React.Component {
       teamPopupEdit: false,
       teamPopupCurrent: false,
       teamPopupSave: this.saveTeamChanges.bind(this),
+      showDialog: false,
+      nameInputField: "",
+      selectedTeamId: "",
       events: [
         {
-          start: moment().toDate(),
-          end: moment().add(1, "hours").toDate(),
-          title: "Some title",
+          start:parse('11/16/2020, 8:00 AM', 'Pp', new Date()), //event start time
+          end:parse('11/16/2020, 9:00 AM', "Pp", new Date()), //event end time
+          title: this.props.bookings[0].name //event title
         },
       ]
     };
+    this.handleClose = this.handleClose.bind(this);
+    this.showDialog = this.showDialog.bind(this);
+    this.goToBooking = this.goToBooking.bind(this);
+  }
+  handleClose() {
+    this.setState({
+      nameInputField: "",
+      selectedTeamId: "",
+      showDialog: false
+    })
+  }
+  handleModalChange = (e) => {
+    this.setState({
+        [e.target.name]: e.target.value
+    })
+  }
+
+  goToBooking(){
+    if (!this.state.selectedTeamId || !this.state.nameInputField){
+      alert("Please fill out both the team ID and meeting name.")
+    }else{
+      this.handleClose()
+      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField)
+    }
   }
 
   changeCurrentTeam(event) {
@@ -52,7 +112,6 @@ class Home extends React.Component {
       currentTeam: this.state.currentTeam
     }, () => this.setState({ teamPopupOpen: true }));
   }
-
   saveTeamChanges(newTeam) {
     var teams = [];
     this.state.teams.forEach(team => {
@@ -87,6 +146,9 @@ class Home extends React.Component {
     }, () => this.props.updateTeams(this.state.teams, this.state.currentTeam));
     this.closeTeamPopup();
   }
+  showDialog() {
+    this.setState({ showDialog: true })
+  }
   render() {
     return (
         <div className='root'>
@@ -102,7 +164,7 @@ class Home extends React.Component {
                 className="nav-item"
               >
                 <Avatar>+</Avatar>
-                <ListItemText className="nav-item-text" primary="New Meeting" />
+                <ListItemText className="nav-item-text" primary="New Meeting" onClick={this.showDialog}/>
               </ListItem>
               <ListItem
                 button
@@ -138,7 +200,6 @@ class Home extends React.Component {
           <h1 className="section_header">Calendar</h1>
           <div className="center">
           <Calendar
-          defaultDate={moment().toDate()}
           defaultView="month"
           events={this.state.events}
           localizer={localizer}
@@ -158,6 +219,45 @@ class Home extends React.Component {
           close={this.closeTeamPopup.bind(this)}
           save={this.state.teamPopupSave}
         />
+        <Dialog open={this.state.showDialog} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Book A Meeting</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter a meeting name and select a team to book the meeting for.
+          </DialogContentText>
+            <TextField
+              autoFocus
+              id="input-name"
+              label="Meeting Name"
+              type="text"
+              margin='normal'
+              name='nameInputField'
+              onChange={e => this.handleModalChange(e)}
+              fullWidth
+            />
+            <InputLabel id="demo-simple-select-label">Team</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={this.state.selectedTeamId ? this.state.selectedTeamId : ''}
+              name='selectedTeamId'
+              onChange={e => this.handleModalChange(e)}
+              fullWidth
+            >
+              {this.state.teams.map((team) => 
+                <MenuItem value={team.id} key={team.id}>{team.name}</MenuItem>
+              )}
+            </Select>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancel
+          </Button>
+            <Button component={Link} to="/bookings"onClick={this.goToBooking} color="primary">
+              Book Room
+          </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }

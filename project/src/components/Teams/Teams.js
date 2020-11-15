@@ -28,6 +28,7 @@ class Teams extends React.Component {
       teamPopupSave: this.saveTeamChanges.bind(this),
       roles: ["Admin", "Moderator", "Member"]
     };
+    
   }
 
   getTeamFromId(id){
