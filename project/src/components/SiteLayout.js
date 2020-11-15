@@ -25,6 +25,13 @@ class SiteLayout extends React.Component {
   }
 
   updateTeams(newTeams) {
+    /*
+    var bookings = this.state.bookings;
+    var teamIds = []
+    newTeams.forEach(team => teamIds.push(team.id));
+    bookings.filter(booking => teamIds.includes(booking.teamId));
+    */
+    
     this.setState({
       teams: newTeams
     }, () => console.log(this.state.teams));

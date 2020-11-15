@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import InfoIcon from '@material-ui/icons/Info';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { shortName } from './Utils';
-
+import { v4 as uuidv4 } from 'uuid';
 const emptyTeam = {
   name: "",
   description: "",
@@ -170,7 +170,7 @@ class Teams extends React.Component {
         <InfoEditPopup
           key={"infoeditpopup-" + this.state.currentTeam}
           open={this.state.teamPopupOpen}
-          team={this.state.teamPopupCurrent ? this.state.teams[this.state.currentTeam] : { ...emptyTeam }}
+          team={this.state.teamPopupCurrent ? this.state.teams[this.state.currentTeam] : { ...emptyTeam, id: uuidv4() }}
           title={this.state.teamPopupTitle}
           edit={this.state.teamPopupEdit}
           close={this.closeTeamPopup.bind(this)}
