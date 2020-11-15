@@ -23,7 +23,7 @@ class SiteLayout extends React.Component {
       teams: defaultTeams,
       rooms: roomAvailability,
       bookings: bookingDefaults,
-      current_team: this.teams.length-1
+      current_team: defaultTeams[0].id
     };
   }
 
