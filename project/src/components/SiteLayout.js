@@ -44,9 +44,44 @@ class SiteLayout extends React.Component {
     }, () => console.log(this.state.teams));
   }
 
-  selectedRoom(year, month, day, time, room) {
+  updateBookings(newBookings) {
+    this.setState({
+      bookings: newBookings
+    });
+  }
+
+  toggleRoomAvailability(year, month, day, time, room) {
     const rooms = this.state.rooms;
-    rooms[year][month][day][time][room] = false;
+    rooms[year][month][day][time][room] = !rooms[year][month][day][time][room]
+    this.setState({
+      rooms: rooms
+    })
+  }
+
+  sortBookingsLogic(a, b){
+    if(a['year'] < b['year']){
+      return -1;
+    }else if(a['year'] > b['year']){
+      return 1;
+    }else if(a['month'] < b['month']){ // year is ===
+      return -1;
+    }else if(a['month'] > b['month']){
+      return 1;
+    }else if(a['day'] < b['day']){ // month is ===
+      return -1;
+    }else if(a['day'] > b['day']){
+      return 1;
+    }else if(parseInt(a['time']) < parseInt(b['time'])){ // day is ===
+      return -1;
+    }else if(parseInt(a['time']) > parseInt(b['time'])){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
+
+  selectedRoom(year, month, day, time, room) {
+    this.toggleRoomAvailability(year, month, day, time, room);
     var bookings = this.state.bookings;
     bookings.push({
       name: this.state.newMeetingName,
@@ -58,29 +93,8 @@ class SiteLayout extends React.Component {
       room: room,
       bookingId: this.state.nextBookId
     })
-    bookings.sort(function(a, b){
-      if(a['year'] < b['year']){
-        return -1;
-      }else if(a['year'] > b['year']){
-        return 1;
-      }else if(a['month'] < b['month']){ // year is ===
-        return -1;
-      }else if(a['month'] > b['month']){
-        return 1;
-      }else if(a['day'] < b['day']){ // month is ===
-        return -1;
-      }else if(a['day'] > b['day']){
-        return 1;
-      }else if(parseInt(a['time']) < parseInt(b['time'])){ // day is ===
-        return -1;
-      }else if(parseInt(a['time']) > parseInt(b['time'])){
-        return 1;
-      }else{
-        return 0;
-      }
-    });
+    bookings.sort(this.sortBookingsLogic);
     this.setState({
-      rooms: rooms,
       showBookings: false,
       bookings: bookings,
       nextBookId: this.state.nextBookId + 1
@@ -109,7 +123,7 @@ class SiteLayout extends React.Component {
                     <Home teams={this.state.teams} />
                   </Route>
                   <Route exact path="/bookings">
-                    {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
+                    {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} toggleRoomAvailability={this.toggleRoomAvailability.bind(this)} updateBookings={this.updateBookings.bind(this)} />}
                   </Route>
                   <Route exact path="/book-room">
                     {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}
