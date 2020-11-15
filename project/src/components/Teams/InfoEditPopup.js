@@ -40,7 +40,6 @@ class InfoEditPopup extends React.Component {
         if (prevProps.team !== this.props.team) {
             var members = this.props.team.members.slice();
             this.setState({ team: {...this.props.team, members: members} });
-            console.log(this.props.team);
         }
     }
 
@@ -115,6 +114,7 @@ class InfoEditPopup extends React.Component {
                             team.name = event.target.value;
                             this.setState({ team: team })
                         }}
+                        disabled={!this.props.edit}
                         InputProps={{
                             readOnly: !this.props.edit,
                         }}
@@ -146,33 +146,35 @@ class InfoEditPopup extends React.Component {
                             team.description = event.target.value;
                             this.setState({ team: team })
                         }}
+                        disabled={!this.props.edit}
                         InputProps={{
                             readOnly: !this.props.edit,
                         }} />
-                    <TableContainer component={Paper}>
+                    <TableContainer className="table" component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell align="center">Role</TableCell>
-                                    <TableCell align="center">Email</TableCell>
-                                    <TableCell align="center">Actions</TableCell>
+                                    <TableCell className="cell">Name</TableCell>
+                                    <TableCell className="cell" align="center">Role</TableCell>
+                                    <TableCell className="cell" align="center">Email</TableCell>
+                                    <TableCell className="cell" align="center">Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody key={this.state.team.members.length}>
                                 {this.state.team.members.map((member, index) =>
                                     <TableRow key={"row" + index}>
-                                        <TableCell component="th" scope="row">
+                                        <TableCell className="cell" component="th" scope="row">
                                             <TextField
                                                 defaultValue={member.name}
                                                 error={!member.name && this.state.error}
                                                 helperText="Required Field"
                                                 placeholder="Input Name..."
                                                 variant="outlined"
+                                                disabled={!this.props.edit}
                                                 onChange={(event) => member.name = event.target.value}
                                             />
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="cell" align="center">
                                             <Select onChange={(e) => {
                                                 var team = this.state.team;
                                                 team.members[index].role = e.target.value;
@@ -190,7 +192,7 @@ class InfoEditPopup extends React.Component {
                                                 <MenuItem value={"Member"}>Member</MenuItem>
                                             </Select>
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="cell" align="center">
                                             <TextField
                                                 defaultValue={member.email}
                                                 error={!member.email && this.state.error}
@@ -198,9 +200,10 @@ class InfoEditPopup extends React.Component {
                                                 placeholder="Input Email..."
                                                 variant="outlined"
                                                 onChange={(event) => member.email = event.target.value}
+                                                disabled={!this.props.edit}
                                             />
                                         </TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="cell" align="center">
                                             <Button
                                                 data-key={index}
                                                 color="default"

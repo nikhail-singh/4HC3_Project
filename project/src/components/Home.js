@@ -10,7 +10,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
 
-
 const emptyTeam = {
   name: "",
   description: "",
@@ -24,7 +23,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       teams: this.props.teams,
-      currentTeam: this.props.teams.length-1,
+      currentTeam: this.props.currentTeam,
       teamPopupOpen: false,
       teamPopupTitle: "",
       teamPopupEdit: false,
@@ -39,12 +38,11 @@ class Home extends React.Component {
       ]
     };
   }
-  changeCurrentTeam(event) {
-    this.setState({
-      currentTeam: event.currentTarget.getAttribute('data-key')
-    });
 
+  changeCurrentTeam(event) {
+    this.props.updateCurrentTeam(event.currentTarget.getAttribute('data-key'));
   }
+
   openTeamPopup(editEnabled, currentTeam, popupTitle) {
     this.setState({
       teamPopupEdit: editEnabled,
@@ -56,17 +54,23 @@ class Home extends React.Component {
   }
 
   saveTeamChanges(newTeam) {
-    var teams = this.state.teams;
-    teams[this.state.currentTeam] = newTeam;
+    var teams = [];
+    this.state.teams.forEach(team => {
+      if(team.id === newTeam.id){
+        teams.push(newTeam);
+      }
+      else{
+        teams.push(team);
+      }
+    });
+
     this.setState({
       teams: teams
     }, () => {
       this.closeTeamPopup();
-      this.props.updateTeams(this.state.teams);
+      this.props.updateTeams(this.state.teams, this.state.currentTeam);
     });
   }
-
-  
   closeTeamPopup() {
     this.setState({
       teamPopupCurrent: false,
@@ -80,7 +84,7 @@ class Home extends React.Component {
     teams.push(newTeam);
     this.setState({
       teams: teams,
-    }, () => this.props.updateTeams(this.state.teams));
+    }, () => this.props.updateTeams(this.state.teams, this.state.currentTeam));
     this.closeTeamPopup();
   }
   render() {
@@ -124,7 +128,7 @@ class Home extends React.Component {
         <Grid item xs={3}>
         <h1 className="section_header">Teams</h1>
         {this.state.teams.map((team, index) => (
-                <ListItem key={"team-option" + index} data-key={index} component={Link} button className="nav-item" to="/teams" onClick={this.changeCurrentTeam.bind(this)}>
+                <ListItem key={"team-option" + index} data-key={team.id} component={Link} button className="nav-item" to="/teams" onClick={this.changeCurrentTeam.bind(this)}>
                   <Avatar>{shortName(team.name)}</Avatar>
                   <ListItemText className="nav-item-text" primary={team.name} />
                 </ListItem>

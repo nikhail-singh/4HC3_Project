@@ -20,7 +20,7 @@ class Teams extends React.Component {
     super(props);
     this.state = {
       teams: this.props.teams,
-      currentTeam: this.props.teams.length-1,
+      currentTeam: this.props.currentTeam,
       teamPopupOpen: false,
       teamPopupTitle: "",
       teamPopupEdit: false,
@@ -28,6 +28,10 @@ class Teams extends React.Component {
       teamPopupSave: this.saveTeamChanges.bind(this),
       roles: ["Admin", "Moderator", "Member"]
     };
+  }
+
+  getTeamFromId(id){
+    return this.state.teams.filter(team => team.id === id)[0]
   }
 
   changeCurrentTeam(event) {
@@ -48,13 +52,21 @@ class Teams extends React.Component {
   }
 
   saveTeamChanges(newTeam) {
-    var teams = this.state.teams;
-    teams[this.state.currentTeam] = newTeam;
+    var teams = [];
+    this.state.teams.forEach(team => {
+      if(team.id === newTeam.id){
+        teams.push(newTeam);
+      }
+      else{
+        teams.push(team);
+      }
+    });
+
     this.setState({
       teams: teams
     }, () => {
       this.closeTeamPopup();
-      this.props.updateTeams(this.state.teams);
+      this.props.updateTeams(this.state.teams, this.state.currentTeam);
     });
   }
 
@@ -71,26 +83,34 @@ class Teams extends React.Component {
     teams.push(newTeam);
     this.setState({
       teams: teams,
-    }, () => this.props.updateTeams(this.state.teams));
+    }, () => this.props.updateTeams(this.state.teams, this.state.currentTeam));
     this.closeTeamPopup();
   }
 
   editMember(member, index) {
-    var teams = this.state.teams;
-    teams[this.state.currentTeam].members[index] = { ...member };
+    var teams = [];
+    this.state.teams.forEach(team => {
+      if(team.id === this.state.currentTeam){
+        team.members[index] = { ...member };
+        teams.push(team);
+      }
+      else{
+        teams.push(team);
+      }
+    });
     this.setState({
       teams: teams
-    }, () => this.props.updateTeams(this.state.teams));
+    }, () => this.props.updateTeams(this.state.teams, this.state.currentTeam));
   }
 
   leaveTeam() {
     var filterTeams = this.state.teams;
-    filterTeams.splice(this.state.currentTeam, 1);
-    console.log(this.filterTeams);
+    filterTeams = filterTeams.filter(team => team.id !== this.getTeamFromId(this.state.currentTeam).id);
+    var currentTeam = filterTeams.length > 0 ? filterTeams[filterTeams.length-1].id : '-1';
     this.setState({
       teams: filterTeams,
-      currentTeam: filterTeams.length-1
-    }, () =>  this.props.updateTeams(this.state.teams));
+      currentTeam: currentTeam
+    }, () =>  this.props.updateTeams(this.state.teams, this.state.currentTeam));
 
   }
 
@@ -105,7 +125,12 @@ class Teams extends React.Component {
           <div className='drawer-container'>
             <List>
               {this.state.teams.map((team, index) => (
-                <ListItem key={"team-option" + index} data-key={index} button className="nav-item" onClick={this.changeCurrentTeam.bind(this)}>
+                <ListItem 
+                  key={"team-option" + index + this.state.currentTeam} 
+                  data-key={team.id} 
+                  button 
+                  className={`nav-item ${team.id === this.state.currentTeam ? "selected-team" : "no"}`} 
+                  onClick={this.changeCurrentTeam.bind(this)}>
                   <Avatar>{shortName(team.name)}</Avatar>
                   <ListItemText className="nav-item-text" primary={team.name} />
                 </ListItem>
@@ -121,10 +146,10 @@ class Teams extends React.Component {
             </List>
           </div>
         </Drawer>
-        {this.state.currentTeam !== -1 && <div className="content">
+        {this.state.currentTeam !== '-1' && <div className="content">
           <Toolbar className="team-header">
-            <Avatar>{shortName(this.state.teams[this.state.currentTeam].name)}</Avatar>
-            <Typography className="team-header-title" variant="h4">{this.state.teams[this.state.currentTeam].name}</Typography>
+            <Avatar>{shortName(this.getTeamFromId(this.state.currentTeam).name)}</Avatar>
+            <Typography className="team-header-title" variant="h4">{this.getTeamFromId(this.state.currentTeam).name}</Typography>
             <div className="header-actions">
               <Button
                 color="default"
@@ -159,8 +184,8 @@ class Teams extends React.Component {
                 key={role}
                 role={role}
                 editMember={this.editMember.bind(this)}
-                memberTotal={this.state.teams[this.state.currentTeam].members}
-                members={this.state.teams[this.state.currentTeam].members.filter(member =>
+                memberTotal={this.getTeamFromId(this.state.currentTeam).members}
+                members={this.getTeamFromId(this.state.currentTeam).members.filter(member =>
                   member.role === role)}
               />
             ))}
@@ -170,7 +195,7 @@ class Teams extends React.Component {
         <InfoEditPopup
           key={"infoeditpopup-" + this.state.currentTeam}
           open={this.state.teamPopupOpen}
-          team={this.state.teamPopupCurrent ? this.state.teams[this.state.currentTeam] : { ...emptyTeam, id: uuidv4() }}
+          team={this.state.teamPopupCurrent ? this.getTeamFromId(this.state.currentTeam) : { ...emptyTeam, id: uuidv4() }}
           title={this.state.teamPopupTitle}
           edit={this.state.teamPopupEdit}
           close={this.closeTeamPopup.bind(this)}

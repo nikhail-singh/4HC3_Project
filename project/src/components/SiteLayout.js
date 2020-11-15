@@ -33,15 +33,22 @@ class SiteLayout extends React.Component {
     this.readyToBook = this.readyToBook.bind(this);
   }
 
-  updateTeams(newTeams) {
+  updateTeams(newTeams, selectedTeamId) {
     var bookings = this.state.bookings;
     var teamIds = []
     newTeams.forEach(team => teamIds.push(team.id));
-    bookings.filter(booking => teamIds.includes(booking.teamId));
+    bookings = bookings.filter(booking => teamIds.includes(booking.teamId));
     this.setState({
       bookings: bookings,
-      teams: newTeams
-    }, () => console.log(this.state.teams));
+      teams: newTeams,
+      selectedTeamId: selectedTeamId
+    });
+  }
+
+  updateCurrentTeam(selectedTeamId){
+    this.setState({
+      selectedTeamId: selectedTeamId
+    }, () => console.log(this.state));
   }
 
   updateBookings(newBookings) {
@@ -120,7 +127,7 @@ class SiteLayout extends React.Component {
               <div className='content'>
                 <Switch>
                   <Route exact path="/">
-                    <Home teams={this.state.teams} />
+                    <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} updateCurrentTeam={this.updateCurrentTeam.bind(this)}/>
                   </Route>
                   <Route exact path="/bookings">
                     {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} toggleRoomAvailability={this.toggleRoomAvailability.bind(this)} updateBookings={this.updateBookings.bind(this)} />}
@@ -129,7 +136,7 @@ class SiteLayout extends React.Component {
                     {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}
                   </Route>
                   <Route exact path="/teams">
-                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} current_team={this.state.current_team}/>
+                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} current_team={this.state.current_team}/>
                   </Route>
                 </Switch>
               </div>
