@@ -55,11 +55,9 @@ class CreateTeamPopup extends React.Component {
 
     handleRemoveMember(event) {
         const removeIndex = event.currentTarget.getAttribute('data-key');
-        console.log(removeIndex)
 
         var team = this.state.team;
         team.members.splice(removeIndex, 1);
-        console.log(team.members);
 
         this.setState({
             team: team
@@ -76,7 +74,6 @@ class CreateTeamPopup extends React.Component {
             this.setState({
                 error: true
             })
-            console.log(this.state);
         }
         else {
             this.props.save(this.state.team);

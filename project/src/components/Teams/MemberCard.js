@@ -22,17 +22,13 @@ class MemberCard extends React.Component {
         super(props);
         this.state = {
             editPopupOpen: false,
-            member: {
-                name: this.props.member.name.slice(),
-                role: this.props.member.role.slice(),
-                email: this.props.member.email.slice()
-            }
+            member: {...this.props.member}
         }
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.member !== this.props.member) {
-            this.setState({ member: this.props.member });
+            this.setState({ member: {...this.props.member} });
         }
     }
     
@@ -45,7 +41,7 @@ class MemberCard extends React.Component {
     closeEditPopup() {
         this.setState({
             editPopupOpen: false,
-            member: this.props.member
+            member: {...this.props.member}
         });
     }
 

@@ -33,21 +33,22 @@ class SiteLayout extends React.Component {
     this.readyToBook = this.readyToBook.bind(this);
   }
 
-  setCurrentTeam(team) {
-    this.setState({
-      current_team: team.id
-    })
-  }
-  
-  updateTeams(newTeams) {
+  updateTeams(newTeams, selectedTeamId) {
     var bookings = this.state.bookings;
     var teamIds = []
     newTeams.forEach(team => teamIds.push(team.id));
-    bookings.filter(booking => teamIds.includes(booking.teamId));
+    bookings = bookings.filter(booking => teamIds.includes(booking.teamId));
     this.setState({
       bookings: bookings,
-      teams: newTeams
-    }, () => console.log(this.state.teams));
+      teams: newTeams,
+      selectedTeamId: selectedTeamId
+    });
+  }
+
+  updateCurrentTeam(selectedTeamId){
+    this.setState({
+      selectedTeamId: selectedTeamId
+    }, () => console.log(this.state));
   }
 
   selectedRoom(year, month, day, time, room) {
@@ -112,7 +113,11 @@ class SiteLayout extends React.Component {
               <div className='content'>
                 <Switch>
                   <Route exact path="/">
+<<<<<<< HEAD
                     <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} setCurrentTeam={this.setCurrentTeam.bind(this)} bookings={this.state.bookings}/>
+=======
+                    <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} updateCurrentTeam={this.updateCurrentTeam.bind(this)}/>
+>>>>>>> ff4f67e1841656c280799924995434749a8e39a2
                   </Route>
                   <Route exact path="/bookings">
                     {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
@@ -121,7 +126,7 @@ class SiteLayout extends React.Component {
                     {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}
                   </Route>
                   <Route exact path="/teams">
-                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} current_team={this.state.current_team}/>
+                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} current_team={this.state.current_team}/>
                   </Route>
                 </Switch>
               </div>
