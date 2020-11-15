@@ -67,7 +67,7 @@ class BookRoom extends React.Component {
   }
 
   handleDateChange = (date) => {
-    const time = date.getHours().toString() + date.getMinutes().toString().padStart(2, '0');
+    const time = date.getHours().toString().padStart(1,'0') + date.getMinutes().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString();
     const day = date.getDate().toString();
     const year = date.getFullYear().toString();

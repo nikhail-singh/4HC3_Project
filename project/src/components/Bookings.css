@@ -8,3 +8,21 @@
 #demo-simple-select-label{
     margin-top: 1em!important;
 }
+
+#deleteIcon:hover{
+    color:red;
+}
+
+#editIcon:hover{
+    color:#FDBF57;
+}
+
+.save-button{
+    background: #FDBF57 !important;
+    border: 1px solid black !important;
+}
+
+.cancel-button{
+    background: white !important;
+    border: 1px solid black !important;
+}

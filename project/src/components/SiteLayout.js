@@ -29,6 +29,8 @@ class SiteLayout extends React.Component {
       showBookings: false,
       selectedTeamId: '0',
       nextBookId: 1,
+      editing: false,
+      editId: 0
     };
     this.readyToBook = this.readyToBook.bind(this);
   }
@@ -90,30 +92,60 @@ class SiteLayout extends React.Component {
   selectedRoom(year, month, day, time, room) {
     this.toggleRoomAvailability(year, month, day, time, room);
     var bookings = this.state.bookings;
-    bookings.push({
-      name: this.state.newMeetingName,
-      year: year,
-      month: month,
-      day: day,
-      time: time,
-      teamId: this.state.selectedTeamId,
-      room: room,
-      bookingId: this.state.nextBookId
-    })
+    if(!this.state.editing){
+      bookings.push({
+        name: this.state.newMeetingName,
+        year: year,
+        month: month,
+        day: day,
+        time: time,
+        teamId: this.state.selectedTeamId,
+        room: room,
+        bookingId: this.state.nextBookId
+      })
+    }else{
+      const editBooking = this.state.bookings.find(b => b.bookingId === this.state.editId);
+      this.toggleRoomAvailability(editBooking.year, editBooking.month, editBooking.day, editBooking.time, editBooking.room);
+      for(var i = 0; i < bookings.length; i++){
+        if(bookings[i]['bookingId'] === this.state.editId){
+          bookings[i]['name'] = this.state.newMeetingName;
+          bookings[i]['teamId'] = this.state.selectedTeamId;
+          bookings[i]['room'] = room;
+          bookings[i]['time'] = time;
+          bookings[i]['day'] = day;
+          bookings[i]['month'] = month;
+          bookings[i]['year'] = year;
+          break;
+        }
+      }
+    }
     bookings.sort(this.sortBookingsLogic);
     this.setState({
       showBookings: false,
       bookings: bookings,
-      nextBookId: this.state.nextBookId + 1
+      nextBookId: this.state.nextBookId + 1,
+      editing: false,
+      editId: 0
     })
   }
 
-  readyToBook(selectedTeamId, newMeetingName){
+  readyToBook(selectedTeamId, newMeetingName, editing, editId){
     this.setState({
       showBookings: true,
       selectedTeamId: selectedTeamId,
       newMeetingName: newMeetingName
     })
+    if(!editing){
+      this.setState({
+        editing: false,
+        editId: 0
+      })
+    }else{
+      this.setState({
+        editing: true,
+        editId: editId
+      })
+    }
   }
 
   render() {
