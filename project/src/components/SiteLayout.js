@@ -7,11 +7,13 @@ import Teams from './Teams/Teams';
 import { defaultTeams } from '../data/DefaultTeams';
 import { roomAvailability } from '../data/roomAvailability';
 import { bookingDefaults } from '../data/bookingsSample';
+
 import './SiteLayout.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 
 class SiteLayout extends React.Component {
@@ -23,19 +25,21 @@ class SiteLayout extends React.Component {
       teams: defaultTeams,
       rooms: roomAvailability,
       bookings: bookingDefaults,
-      current_team: defaultTeams[0].id
+      current_team: defaultTeams[0].id,
+      showBookings: false,
+      selectedTeamId: '0',
+      nextBookId: 1,
     };
+    this.readyToBook = this.readyToBook.bind(this);
   }
 
   updateTeams(newTeams) {
-    /*
     var bookings = this.state.bookings;
     var teamIds = []
     newTeams.forEach(team => teamIds.push(team.id));
     bookings.filter(booking => teamIds.includes(booking.teamId));
-    */
-    
     this.setState({
+      bookings: bookings,
       teams: newTeams
     }, () => console.log(this.state.teams));
   }
@@ -43,8 +47,30 @@ class SiteLayout extends React.Component {
   selectedRoom(year, month, day, time, room) {
     const rooms = this.state.rooms;
     rooms[year][month][day][time][room] = false;
+    var bookings = this.state.bookings;
+    bookings.push({
+      name: this.state.newMeetingName,
+      year: year,
+      month: month,
+      day: day,
+      time: time,
+      teamId: this.state.selectedTeamId,
+      room: room,
+      bookingId: this.state.nextBookId
+    })
     this.setState({
-      rooms: rooms
+      rooms: rooms,
+      showBookings: false,
+      bookings: bookings,
+      nextBookId: this.state.nextBookId + 1
+    })
+  }
+
+  readyToBook(selectedTeamId, newMeetingName){
+    this.setState({
+      showBookings: true,
+      selectedTeamId: selectedTeamId,
+      newMeetingName: newMeetingName
     })
   }
 
@@ -62,10 +88,10 @@ class SiteLayout extends React.Component {
                     <Home teams={this.state.teams} />
                   </Route>
                   <Route exact path="/bookings">
-                    <Bookings bookings={this.state.bookings} />
+                    {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
                   </Route>
                   <Route exact path="/book-room">
-                    <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/>
+                    {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}
                   </Route>
                   <Route exact path="/teams">
                     <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} current_team={this.state.current_team}/>
