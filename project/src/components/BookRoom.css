@@ -1,0 +1,39 @@
+.map-available-room{
+    fill: #000000;
+}
+
+.map-unavailable-room{
+    fill: white;
+}
+
+.map-available-room-background{
+    fill: #ffc057;
+}
+
+.map-unavailable-room-background{
+    fill: #850044;
+}
+
+.clickable:hover{
+    cursor: pointer;
+}
+
+.clickable:hover > .map-available-room-background{
+    fill: #ffb331;
+}
+
+.clickable:hover > .map-unavailable-room-background{
+    fill: #640134;
+}
+
+@media only screen and (max-width: 481px) {
+    .map-text{
+        font-size: xx-large;
+    }
+}
+
+@media only screen and (min-width: 481px) {
+    .map-text{
+        font-size: large;
+    }
+}
