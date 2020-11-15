@@ -136,9 +136,9 @@ class Bookings extends React.Component {
     return (
       <>
         <Container style={{ textAlign: 'center' }}>
-          <Typography align="center" variant='h2' gutterBottom>Future Meetings</Typography>
+          <Typography align="center" variant='h2' gutterBottom>Bookings</Typography>
           <Button className='member-action' onClick={this.showDialog}>Book a Meeting</Button>
-          <Typography align="center" variant='body2' gutterBottom >See all of your future bookings below. To modify a booking, click the pencil icon. To delete a booking. select the trash can icon.</Typography>
+          <Typography align="center" variant='body2' gutterBottom >See all of your bookings below. To modify a booking, click the pencil icon. To delete a booking. select the trash can icon.</Typography>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
