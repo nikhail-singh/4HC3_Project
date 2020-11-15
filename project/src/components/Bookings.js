@@ -64,8 +64,12 @@ class Bookings extends React.Component {
   }
 
   goToBooking(){
-    this.handleClose()
-    this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField)
+    if (!this.state.selectedTeamId || !this.state.nameInputField){
+      alert("Please fill out both the team ID and meeting name.")
+    }else{
+      this.handleClose()
+      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField)
+    }
   }
 
   render() {

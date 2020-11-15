@@ -65,6 +65,27 @@ class SiteLayout extends React.Component {
       room: room,
       bookingId: this.state.nextBookId
     })
+    bookings.sort(function(a, b){
+      if(a['year'] < b['year']){
+        return -1;
+      }else if(a['year'] > b['year']){
+        return 1;
+      }else if(a['month'] < b['month']){ // year is ===
+        return -1;
+      }else if(a['month'] > b['month']){
+        return 1;
+      }else if(a['day'] < b['day']){ // month is ===
+        return -1;
+      }else if(a['day'] > b['day']){
+        return 1;
+      }else if(parseInt(a['time']) < parseInt(b['time'])){ // day is ===
+        return -1;
+      }else if(parseInt(a['time']) > parseInt(b['time'])){
+        return 1;
+      }else{
+        return 0;
+      }
+    });
     this.setState({
       rooms: rooms,
       showBookings: false,
