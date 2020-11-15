@@ -1,3 +1,4 @@
+
 .root {
     display: flex;
     height: 100%;
@@ -29,6 +30,10 @@
 
 .nav-item{
     width: 100%;
+}
+
+.nav-item.hover {
+    background-color: gray;
 }
 
 .nav-item-text{

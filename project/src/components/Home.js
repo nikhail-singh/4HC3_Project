@@ -8,6 +8,8 @@ import { shortName } from './Teams/Utils';
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { v4 as uuidv4 } from 'uuid';
+import {Link} from "react-router-dom";
+
 
 const emptyTeam = {
   name: "",
@@ -31,7 +33,7 @@ class Home extends React.Component {
       events: [
         {
           start: moment().toDate(),
-          end: moment().add(1, "days").toDate(),
+          end: moment().add(1, "hours").toDate(),
           title: "Some title",
         },
       ]
@@ -64,6 +66,7 @@ class Home extends React.Component {
     });
   }
 
+  
   closeTeamPopup() {
     this.setState({
       teamPopupCurrent: false,
@@ -108,6 +111,7 @@ class Home extends React.Component {
               <ListItem
                 button
                 className="nav-item"
+                onClick={()=> window.open("https://google.com", "_blank")} //todo make the help open our demo video
               >
                 <Avatar>?</Avatar>
                 <ListItemText className="nav-item-text" primary="Help" />
@@ -120,7 +124,7 @@ class Home extends React.Component {
         <Grid item xs={3}>
         <h1 className="section_header">Teams</h1>
         {this.state.teams.map((team, index) => (
-                <ListItem key={"team-option" + index} data-key={index} button className="nav-item" onClick={this.changeCurrentTeam.bind(this)}>
+                <ListItem key={"team-option" + index} data-key={index} component={Link} button className="nav-item" to="/teams" onClick={this.changeCurrentTeam.bind(this)}>
                   <Avatar>{shortName(team.name)}</Avatar>
                   <ListItemText className="nav-item-text" primary={team.name} />
                 </ListItem>
@@ -134,6 +138,7 @@ class Home extends React.Component {
           defaultView="month"
           events={this.state.events}
           localizer={localizer}
+          onSelectEvent={event => alert(event.title)} //todo open edit event
           style={{ height: "50vh" }}
           ></Calendar>
           </div>
