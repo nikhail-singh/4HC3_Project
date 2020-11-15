@@ -5,6 +5,7 @@ import Bookings from './Bookings';
 import BookRoom from './BookRoom';
 import Teams from './Teams/Teams';
 import { defaultTeams } from '../data/DefaultTeams';
+import { roomAvailability } from '../data/roomAvailability';
 import './SiteLayout.css';
 import {
   BrowserRouter as Router,
@@ -18,7 +19,8 @@ class SiteLayout extends React.Component {
     super(props);
 
     this.state = {
-      teams: defaultTeams
+      teams: defaultTeams,
+      rooms: roomAvailability
     };
   }
 
@@ -26,6 +28,14 @@ class SiteLayout extends React.Component {
     this.setState({
       teams: newTeams
     }, () => console.log(this.state.teams));
+  }
+
+  selectedRoom(year, month, day, time, room) {
+    const rooms = this.state.rooms;
+    rooms[year][month][day][time][room] = false;
+    this.setState({
+      rooms: rooms
+    })
   }
 
   render() {
@@ -45,7 +55,7 @@ class SiteLayout extends React.Component {
                     <Bookings />
                   </Route>
                   <Route exact path="/book-room">
-                    <BookRoom />
+                    <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/>
                   </Route>
                   <Route exact path="/teams">
                     <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)}/>

@@ -1,6 +1,7 @@
 import React from 'react';
 import './BookRoom.css';
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography, Hidden } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -13,12 +14,25 @@ import DateFnsUtils from '@date-io/date-fns';
 
 class BookRoom extends React.Component {
   constructor(props) {
+    let date = new Date(Date.now());
+    date.setHours(8,0)
+    const time = date.getHours().toString() + date.getMinutes().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+    const year = date.getFullYear().toString();
     super(props);
     this.state = { width: 0, height: 0,
-      roomAvailabile: {'201': false, '203': true, '204A': true, '204B': false, '205': true},
-      selectedDate: Date.now()
+      roomAvailabile: this.props.roomsAvailable[year][month][day][time] ? this.props.roomsAvailable[year][month][day][time] : {'201': false, '203': false, '204A': false, '204B': false, '205': false},
+      roomAvailability: this.props.roomsAvailable,
+      selectedMonth: month,
+      selectedDay: day,
+      selectedYear: year,
+      selectedTime: time,
+      selectedDate: date,
+      showSelectedRoomWarning: false
     };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.mapRoomClicked = this.mapRoomClicked.bind(this)
   }
   
   componentDidMount() {
@@ -43,12 +57,29 @@ class BookRoom extends React.Component {
   }
 
   mapRoomClicked(roomNumber){
-    console.log(roomNumber)
+    if (this.state.roomAvailabile[roomNumber])
+      this.props.roomSelected(this.state.selectedYear, this.state.selectedMonth, this.state.selectedDay, this.state.selectedTime, roomNumber);
+    else
+      this.setState({
+        showSelectedRoomWarning: true,
+        clickedRoom:roomNumber
+      })
   }
 
   handleDateChange = (date) => {
+    const time = date.getHours().toString() + date.getMinutes().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+    const year = date.getFullYear().toString();
+    const roomsAvailable = this.state.roomAvailability[year][month][day][time];
     this.setState({
-      selectedDate: date
+      roomAvailabile: roomsAvailable ? roomsAvailable : {'201': false, '203': false, '204A': false, '204B': false, '205': false},
+      selectedMonth: month,
+      selectedDay: day,
+      selectedYear: year,
+      selectedTime: time,
+      selectedDate: date,
+      showSelectedRoomWarning: false,
     })
   };
 
@@ -208,7 +239,7 @@ class BookRoom extends React.Component {
         </g>
       </svg>
     return (
-      <Container alignItems="center">
+      <Container>
         <Typography align="center" variant='h2' gutterBottom>Book a Room</Typography>
         <Typography align="center" variant='body2' gutterBottom >To get started, select a date and time then click on an available room.</Typography>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -231,6 +262,7 @@ class BookRoom extends React.Component {
               id="time-picker"
               label="Time picker"
               variant="inline"
+              minutesStep={30}
               value={this.state.selectedDate}
               onChange={this.handleDateChange}
               KeyboardButtonProps={{
@@ -239,6 +271,9 @@ class BookRoom extends React.Component {
             />
           </Grid>
         </MuiPickersUtilsProvider>
+        <Hidden xsUp={!this.state.showSelectedRoomWarning}>
+        <Alert severity="warning" onClose={() => {this.setState({showSelectedRoomWarning: false})}}>It looks like another Marauder has already booked room {this.state.clickedRoom}! Please select another available room.</Alert>
+        </Hidden>
         {this.props.isMobile ? verticalMap : horizontalMap}
       </Container>
     )

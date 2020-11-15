@@ -25,5 +25,6 @@ def generateJSON(years=[2020], months=[11,12]):
 
 
 if __name__ == '__main__':
-    with open('project/src/data/roomAvailability.json', 'w') as fh:
+    with open('project/src/data/roomAvailability.js', 'w') as fh:
+        print("export const roomAvailability = ", file=fh)
         print(json.dumps(generateJSON(), indent=4), file=fh)
