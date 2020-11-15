@@ -27,7 +27,7 @@ class SiteLayout extends React.Component {
       bookings: bookingDefaults,
       showBookings: false,
       selectedTeamId: '0',
-      nextBookId: 1
+      nextBookId: 1,
       current_team: this.teams.length-1
     };
     this.readyToBook = this.readyToBook.bind(this);
