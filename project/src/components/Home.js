@@ -40,6 +40,10 @@ const emptyTeam = {
   members: [],
 };
 
+const locales = { //use canadian time format
+  'en-Ca': require('date-fns/locale/en-Ca'),
+}
+
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -48,9 +52,7 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-const locales = { //use canadian time format
-  'en-Ca': require('date-fns/locale/en-Ca'),
-}
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -65,18 +67,28 @@ class Home extends React.Component {
       showDialog: false,
       nameInputField: "",
       selectedTeamId: "",
-      events: [
-        {
-          start:parse('11/16/2020, 8:00 AM', 'Pp', new Date()), //event start time
-          end:parse('11/16/2020, 9:00 AM', "Pp", new Date()), //event end time
-          title: this.props.bookings[0].name //event title
-        },
-      ]
+      bookings: this.props.bookings,
     };
     this.handleClose = this.handleClose.bind(this);
     this.showDialog = this.showDialog.bind(this);
     this.goToBooking = this.goToBooking.bind(this);
+    this.getCalendarEventsFromBookings = this.getCalendarEventsFromBookings.bind(this);
   }
+
+  getCalendarEventsFromBookings(){
+    var events = [];
+    for(var i = 0; i < this.state.bookings.length; i++){
+      var b = this.state.bookings[i];
+      var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
+      events.push({
+        title: this.state.bookings[i]['name'],
+        start: start,
+        end: start.setMinutes(start.getMinutes() + 30)
+      })
+    }
+    return events;
+  }
+
   handleClose() {
     this.setState({
       nameInputField: "",
@@ -201,7 +213,7 @@ class Home extends React.Component {
           <div className="center">
           <Calendar
           defaultView="month"
-          events={this.state.events}
+          events={this.getCalendarEventsFromBookings()}
           localizer={localizer}
           onSelectEvent={event => alert(event.title)} //todo open edit event
           style={{ height: "50vh" }}
