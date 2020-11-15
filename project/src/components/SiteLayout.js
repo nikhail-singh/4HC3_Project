@@ -68,7 +68,7 @@ class SiteLayout extends React.Component {
                     <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/>
                   </Route>
                   <Route exact path="/teams">
-                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)}/>
+                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} current_team={this.state.current_team}/>
                   </Route>
                 </Switch>
               </div>
