@@ -28,6 +28,8 @@ class SiteLayout extends React.Component {
       showBookings: false,
       selectedTeamId: '0',
       nextBookId: 1,
+      editing: false,
+      editId: 0
     };
     this.readyToBook = this.readyToBook.bind(this);
   }
@@ -50,55 +52,99 @@ class SiteLayout extends React.Component {
     }, () => console.log(this.state));
   }
 
-  selectedRoom(year, month, day, time, room) {
-    const rooms = this.state.rooms;
-    rooms[year][month][day][time][room] = false;
-    var bookings = this.state.bookings;
-    bookings.push({
-      name: this.state.newMeetingName,
-      year: year,
-      month: month,
-      day: day,
-      time: time,
-      teamId: this.state.selectedTeamId,
-      room: room,
-      bookingId: this.state.nextBookId
-    })
-    bookings.sort(function(a, b){
-      if(a['year'] < b['year']){
-        return -1;
-      }else if(a['year'] > b['year']){
-        return 1;
-      }else if(a['month'] < b['month']){ // year is ===
-        return -1;
-      }else if(a['month'] > b['month']){
-        return 1;
-      }else if(a['day'] < b['day']){ // month is ===
-        return -1;
-      }else if(a['day'] > b['day']){
-        return 1;
-      }else if(parseInt(a['time']) < parseInt(b['time'])){ // day is ===
-        return -1;
-      }else if(parseInt(a['time']) > parseInt(b['time'])){
-        return 1;
-      }else{
-        return 0;
-      }
-    });
+  updateBookings(newBookings) {
     this.setState({
-      rooms: rooms,
-      showBookings: false,
-      bookings: bookings,
-      nextBookId: this.state.nextBookId + 1
+      bookings: newBookings
+    });
+  }
+
+  toggleRoomAvailability(year, month, day, time, room) {
+    const rooms = this.state.rooms;
+    rooms[year][month][day][time][room] = !rooms[year][month][day][time][room]
+    this.setState({
+      rooms: rooms
     })
   }
 
-  readyToBook(selectedTeamId, newMeetingName){
+  sortBookingsLogic(a, b){
+    if(a['year'] < b['year']){
+      return -1;
+    }else if(a['year'] > b['year']){
+      return 1;
+    }else if(a['month'] < b['month']){ // year is ===
+      return -1;
+    }else if(a['month'] > b['month']){
+      return 1;
+    }else if(a['day'] < b['day']){ // month is ===
+      return -1;
+    }else if(a['day'] > b['day']){
+      return 1;
+    }else if(parseInt(a['time']) < parseInt(b['time'])){ // day is ===
+      return -1;
+    }else if(parseInt(a['time']) > parseInt(b['time'])){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
+
+  selectedRoom(year, month, day, time, room) {
+    this.toggleRoomAvailability(year, month, day, time, room);
+    var bookings = this.state.bookings;
+    if(!this.state.editing){
+      bookings.push({
+        name: this.state.newMeetingName,
+        year: year,
+        month: month,
+        day: day,
+        time: time,
+        teamId: this.state.selectedTeamId,
+        room: room,
+        bookingId: this.state.nextBookId
+      })
+    }else{
+      const editBooking = this.state.bookings.find(b => b.bookingId === this.state.editId);
+      this.toggleRoomAvailability(editBooking.year, editBooking.month, editBooking.day, editBooking.time, editBooking.room);
+      for(var i = 0; i < bookings.length; i++){
+        if(bookings[i]['bookingId'] === this.state.editId){
+          bookings[i]['name'] = this.state.newMeetingName;
+          bookings[i]['teamId'] = this.state.selectedTeamId;
+          bookings[i]['room'] = room;
+          bookings[i]['time'] = time;
+          bookings[i]['day'] = day;
+          bookings[i]['month'] = month;
+          bookings[i]['year'] = year;
+          break;
+        }
+      }
+    }
+    bookings.sort(this.sortBookingsLogic);
+    this.setState({
+      showBookings: false,
+      bookings: bookings,
+      nextBookId: this.state.nextBookId + 1,
+      editing: false,
+      editId: 0
+    })
+  }
+
+  readyToBook(selectedTeamId, newMeetingName, editing, editId){
     this.setState({
       showBookings: true,
       selectedTeamId: selectedTeamId,
       newMeetingName: newMeetingName
     })
+    if(!editing){
+      this.setState({
+        editing: false,
+        editId: 0
+      })
+    }else{
+      this.setState({
+        editing: true,
+        editId: editId
+      })
+    }
   }
 
   render() {
@@ -115,7 +161,7 @@ class SiteLayout extends React.Component {
                     <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} bookings={this.state.bookings} goToBooking={this.readyToBook} updateCurrentTeam={this.updateCurrentTeam.bind(this)}/>
                   </Route>
                   <Route exact path="/bookings">
-                    {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
+                    {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} toggleRoomAvailability={this.toggleRoomAvailability.bind(this)} updateBookings={this.updateBookings.bind(this)} />}
                   </Route>
                   <Route exact path="/book-room">
                     {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}

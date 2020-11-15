@@ -89,8 +89,16 @@ class Teams extends React.Component {
   }
 
   editMember(member, index) {
-    var teams = this.state.teams;
-    teams[this.state.currentTeam].members[index] = { ...member };
+    var teams = [];
+    this.state.teams.forEach(team => {
+      if(team.id === this.state.currentTeam){
+        team.members[index] = { ...member };
+        teams.push(team);
+      }
+      else{
+        teams.push(team);
+      }
+    });
     this.setState({
       teams: teams
     }, () => this.props.updateTeams(this.state.teams, this.state.currentTeam));

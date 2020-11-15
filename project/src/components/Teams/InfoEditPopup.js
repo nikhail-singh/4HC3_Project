@@ -114,6 +114,7 @@ class InfoEditPopup extends React.Component {
                             team.name = event.target.value;
                             this.setState({ team: team })
                         }}
+                        disabled={!this.props.edit}
                         InputProps={{
                             readOnly: !this.props.edit,
                         }}
@@ -145,6 +146,7 @@ class InfoEditPopup extends React.Component {
                             team.description = event.target.value;
                             this.setState({ team: team })
                         }}
+                        disabled={!this.props.edit}
                         InputProps={{
                             readOnly: !this.props.edit,
                         }} />
@@ -168,6 +170,7 @@ class InfoEditPopup extends React.Component {
                                                 helperText="Required Field"
                                                 placeholder="Input Name..."
                                                 variant="outlined"
+                                                disabled={!this.props.edit}
                                                 onChange={(event) => member.name = event.target.value}
                                             />
                                         </TableCell>
@@ -197,6 +200,7 @@ class InfoEditPopup extends React.Component {
                                                 placeholder="Input Email..."
                                                 variant="outlined"
                                                 onChange={(event) => member.email = event.target.value}
+                                                disabled={!this.props.edit}
                                             />
                                         </TableCell>
                                         <TableCell className="cell" align="center">
