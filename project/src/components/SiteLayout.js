@@ -113,11 +113,7 @@ class SiteLayout extends React.Component {
               <div className='content'>
                 <Switch>
                   <Route exact path="/">
-<<<<<<< HEAD
-                    <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} setCurrentTeam={this.setCurrentTeam.bind(this)} bookings={this.state.bookings}/>
-=======
                     <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} currentTeam={this.state.selectedTeamId} updateCurrentTeam={this.updateCurrentTeam.bind(this)}/>
->>>>>>> ff4f67e1841656c280799924995434749a8e39a2
                   </Route>
                   <Route exact path="/bookings">
                     {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
