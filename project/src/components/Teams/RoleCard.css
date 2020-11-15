@@ -21,10 +21,12 @@
 }
 
 .member-bar{
-    overflow: scroll;
+    padding-bottom: 10px;
+    overflow-x: scroll;
 }
 
 .member-card{
     width: 175px;
     min-width: 175px;
+    padding-top: 10px;
 }
