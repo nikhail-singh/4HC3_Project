@@ -1,3 +1,4 @@
+
 .root {
     display: flex;
     height: 100%;
@@ -31,13 +32,14 @@
     width: 100%;
 }
 
+.nav-item.hover {
+    background-color: gray;
+}
+
 .nav-item-text{
     margin-left: 20px;
 }
 
-.MuiAvatar-circle {
-    background-color: yellow;
-}
 .section_header {
     text-align: center;
  

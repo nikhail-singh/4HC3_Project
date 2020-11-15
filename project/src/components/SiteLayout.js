@@ -28,6 +28,7 @@ class SiteLayout extends React.Component {
       showBookings: false,
       selectedTeamId: '0',
       nextBookId: 1
+      current_team: this.teams.length-1
     };
     this.readyToBook = this.readyToBook.bind(this);
   }
@@ -93,7 +94,7 @@ class SiteLayout extends React.Component {
                     {this.state.showBookings ? <BookRoom roomsAvailable={this.state.rooms} roomSelected={this.selectedRoom.bind(this)}/> : <Redirect to='/bookings' />}
                   </Route>
                   <Route exact path="/teams">
-                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)}/>
+                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} current_team={this.state.current_team}/>
                   </Route>
                 </Switch>
               </div>
