@@ -11,10 +11,12 @@
 
 #deleteIcon:hover{
     color:red;
+    cursor: pointer;
 }
 
 #editIcon:hover{
     color:#FDBF57;
+    cursor: pointer;
 }
 
 .save-button{
