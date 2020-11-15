@@ -4,6 +4,7 @@ import Home from './Home';
 import Bookings from './Bookings';
 import BookRoom from './BookRoom';
 import Teams from './Teams/Teams';
+import { defaultTeams } from '../data/DefaultTeams';
 import './SiteLayout.css';
 import {
   BrowserRouter as Router,
@@ -16,7 +17,15 @@ class SiteLayout extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      teams: defaultTeams
+    };
+  }
+
+  updateTeams(newTeams) {
+    this.setState({
+      teams: newTeams
+    }, () => console.log(this.state.teams));
   }
 
   render() {
@@ -30,16 +39,16 @@ class SiteLayout extends React.Component {
               <div className='content'>
                 <Switch>
                   <Route exact path="/">
-                    <Home/>
+                    <Home teams={this.state.teams} />
                   </Route>
                   <Route exact path="/bookings">
-                    <Bookings/>
+                    <Bookings />
                   </Route>
                   <Route exact path="/book-room">
-                    <BookRoom/>
+                    <BookRoom />
                   </Route>
                   <Route exact path="/teams">
-                    <Teams/>
+                    <Teams key={this.state.teams.length} teams={this.state.teams} updateTeams={this.updateTeams.bind(this)}/>
                   </Route>
                 </Switch>
               </div>

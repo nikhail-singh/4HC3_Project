@@ -1,5 +1,6 @@
 .member-card{
     text-align: center;
+    margin: 0px 5px 0px 5px;
 }
 
 .member-avatar{
@@ -9,8 +10,30 @@
     margin-top: 10px;
 }
 
+.member-avatar-popup{
+    margin-left: 30%;
+    height: 100px !important;
+    width: 100px !important;
+    margin-left: 40%;
+    margin-bottom: 10px;
+}
+
 .member-action{
     background: #FDBF57 !important;
     border: 1px solid black !important;
     width: 50%;
+}
+
+.role-select-popup{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.member-name{
+    overflow: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
 }

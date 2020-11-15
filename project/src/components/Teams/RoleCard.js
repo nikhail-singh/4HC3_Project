@@ -1,50 +1,48 @@
 import React from 'react';
 import './RoleCard.css';
 import MemberCard from './MemberCard';
-import { Typography, Button, Card, CardContent, CardHeader, Toolbar, Collapse, Divider, IconButton } from '@material-ui/core';
+import { Typography, Card, CardContent, CardHeader, Toolbar, Collapse, Divider, IconButton } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import SettingsIcon from '@material-ui/icons/Settings';
-import InfoIcon from '@material-ui/icons/Info';
 
 class RoleCard extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            expanded: true,
+            members: this.props.members
+        }
     }
 
+    toggleExpanded(){
+        this.setState({
+            expanded: !this.state.expanded
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.members !== this.props.members) {
+            this.setState({ members: this.props.members });
+        }
+    }
+    
     render() {
         return (
-            <Card className="role-card">
+            <Card className="role-card" key={this.props.members}>
                 <CardHeader
-                    action={
-                        <div className="role-actions">
-                            <Button
-                                className="role-action"
-                                startIcon={<SettingsIcon />}
-                            >
-                                Settings
-                            </Button>
-                            <Button
-                                className="role-action"
-                                startIcon={<InfoIcon />}
-                            >
-                                Info
-                            </Button>
-                        </div>
-                    }
                     title={
                         <Toolbar className="role-header">
-                            <IconButton>
-                                <ArrowDropDownIcon />
+                            <IconButton onClick={this.toggleExpanded.bind(this)}>
+                                <ArrowDropDownIcon/>
                             </IconButton>
                             <Typography variant="h5">{this.props.role}</Typography>
                         </Toolbar>}
                     className="role-card-header" />
                 <Divider />
-                <Collapse in={true} timeout="auto" unmountOnExit>
+                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Toolbar>
-                            {this.props.members.map((member, index) => (
-                                <MemberCard key={'member-' + index} member={member}/>
+                        <Toolbar className="member-bar" key={this.props.members.length}>
+                            {this.state.members.map((member, index) => (
+                                <MemberCard key={member} className="member-card" memberTotal={this.props.memberTotal} editMember={this.props.editMember.bind(this)} member={member}/>
                             ))}
                         </Toolbar>
                     </CardContent>

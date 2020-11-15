@@ -19,3 +19,12 @@
 .role-card-header{
     padding: 10px 10px 0px 0px !important;
 }
+
+.member-bar{
+    overflow: scroll;
+}
+
+.member-card{
+    width: 175px;
+    min-width: 175px;
+}

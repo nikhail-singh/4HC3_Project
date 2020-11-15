@@ -1,0 +1,34 @@
+.text-input{
+    width: 100%;
+    font-size: medium;
+    margin-bottom: 15px !important;
+}
+
+.add-member-popper{
+    border: 1px solid black;
+    background: white;
+    z-index: 1400;
+}
+
+.avatar{
+    margin-right: 10px;
+}
+
+.add-member-button{
+    margin-left: 40% !important;
+    margin-top: 10px !important;
+}
+
+.role-select{
+    min-width: 100px;
+}
+
+.save-button{
+    background: #FDBF57 !important;
+    border: 1px solid black !important;
+}
+
+.cancel-button{
+    background: white !important;
+    border: 1px solid black !important;
+}
