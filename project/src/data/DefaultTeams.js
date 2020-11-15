@@ -1,8 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export var defaultTeams = [
     {
-        id: uuidv4(),
+        id: '0',
         name: "Team 1",
         description: "Description of Team 11",
         privacy: "public",

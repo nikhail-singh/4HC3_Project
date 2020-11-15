@@ -250,7 +250,7 @@ class BookRoom extends React.Component {
               format="MM/dd/yyyy"
               margin="normal"
               id="date-picker-inline"
-              label="Date picker inline"
+              label="Booking Date"
               value={this.state.selectedDate}
               onChange={this.handleDateChange}
               KeyboardButtonProps={{
@@ -260,7 +260,7 @@ class BookRoom extends React.Component {
             <KeyboardTimePicker
               margin="normal"
               id="time-picker"
-              label="Time picker"
+              label="Booking Time"
               variant="inline"
               minutesStep={30}
               value={this.state.selectedDate}

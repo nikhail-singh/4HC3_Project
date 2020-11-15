@@ -5,7 +5,8 @@ export var bookingDefaults = [
         month: '11',
         day: '16',
         time: '800',
-        teamId: '1',
+        teamId: '0',
+        room: '201',
         bookingId: 0
     }
 ]
