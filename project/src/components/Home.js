@@ -10,7 +10,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
 
-
 const emptyTeam = {
   name: "",
   description: "",
@@ -24,7 +23,8 @@ class Home extends React.Component {
     super(props);
     this.state = {
       teams: this.props.teams,
-      currentTeam: this.props.teams.length-1,
+      currentTeam: this.props.currentTeam,
+      bookings: this.props.bookings,
       teamPopupOpen: false,
       teamPopupTitle: "",
       teamPopupEdit: false,
@@ -65,7 +65,6 @@ class Home extends React.Component {
       this.props.updateTeams(this.state.teams);
     });
   }
-
   
   closeTeamPopup() {
     this.setState({
@@ -82,6 +81,9 @@ class Home extends React.Component {
       teams: teams,
     }, () => this.props.updateTeams(this.state.teams));
     this.closeTeamPopup();
+  }
+  changeCurrent() {
+    this.props.setCurrentTeam(this.state.currentTeam)
   }
   render() {
     return (
@@ -124,7 +126,7 @@ class Home extends React.Component {
         <Grid item xs={3}>
         <h1 className="section_header">Teams</h1>
         {this.state.teams.map((team, index) => (
-                <ListItem key={"team-option" + index} data-key={index} component={Link} button className="nav-item" to="/teams" onClick={this.changeCurrentTeam.bind(this)}>
+                <ListItem key={"team-option" + index} data-key={index} component={Link} button className="nav-item" to="/teams" onClick={this.changeCurrent.bind(this)}>
                   <Avatar>{shortName(team.name)}</Avatar>
                   <ListItemText className="nav-item-text" primary={team.name} />
                 </ListItem>

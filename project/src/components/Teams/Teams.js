@@ -20,7 +20,7 @@ class Teams extends React.Component {
     super(props);
     this.state = {
       teams: this.props.teams,
-      currentTeam: this.props.teams.length-1,
+      currentTeam: this.props.current_team,
       teamPopupOpen: false,
       teamPopupTitle: "",
       teamPopupEdit: false,

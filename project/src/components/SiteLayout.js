@@ -33,6 +33,12 @@ class SiteLayout extends React.Component {
     this.readyToBook = this.readyToBook.bind(this);
   }
 
+  setCurrentTeam(team) {
+    this.setState({
+      current_team: team.id
+    })
+  }
+  
   updateTeams(newTeams) {
     var bookings = this.state.bookings;
     var teamIds = []
@@ -106,7 +112,7 @@ class SiteLayout extends React.Component {
               <div className='content'>
                 <Switch>
                   <Route exact path="/">
-                    <Home teams={this.state.teams} />
+                    <Home teams={this.state.teams} updateTeams={this.updateTeams.bind(this)} setCurrentTeam={this.setCurrentTeam.bind(this)} bookings={this.state.bookings}/>
                   </Route>
                   <Route exact path="/bookings">
                     {this.state.showBookings ? <Redirect to='/book-room' /> : <Bookings bookings={this.state.bookings} teams={this.state.teams} goToBooking={this.readyToBook} />}
