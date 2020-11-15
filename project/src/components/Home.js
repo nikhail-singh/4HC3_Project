@@ -40,6 +40,9 @@ const emptyTeam = {
   members: [],
 };
 
+const locales = { //use canadian time format
+  'en-Ca': require('date-fns/locale/en-Ca'),
+}
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -48,9 +51,6 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-const locales = { //use canadian time format
-  'en-Ca': require('date-fns/locale/en-Ca'),
-}
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -61,22 +61,27 @@ class Home extends React.Component {
       teamPopupTitle: "",
       teamPopupEdit: false,
       teamPopupCurrent: false,
+      bookings: this.props.bookings,
       teamPopupSave: this.saveTeamChanges.bind(this),
       showDialog: false,
       nameInputField: "",
       selectedTeamId: "",
-      events: [
+      for(var i = 0; i < bookings.length; i++){
+        events: [
         {
           start:parse('11/16/2020, 8:00 AM', 'Pp', new Date()), //event start time
           end:parse('11/16/2020, 9:00 AM', "Pp", new Date()), //event end time
           title: this.props.bookings[0].name //event title
         },
       ]
+    }
     };
+    
     this.handleClose = this.handleClose.bind(this);
     this.showDialog = this.showDialog.bind(this);
     this.goToBooking = this.goToBooking.bind(this);
   }
+
   handleClose() {
     this.setState({
       nameInputField: "",
@@ -84,6 +89,7 @@ class Home extends React.Component {
       showDialog: false
     })
   }
+
   handleModalChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value
@@ -148,6 +154,13 @@ class Home extends React.Component {
   }
   showDialog() {
     this.setState({ showDialog: true })
+  }
+  getEvents() {
+    var events =[]
+    var bookings = this.state.bookings;
+    for(var i = 0; i < bookings.length; i++){
+        events[i]['title']=this.state.bookings[i]['name']
+    }
   }
   render() {
     return (
