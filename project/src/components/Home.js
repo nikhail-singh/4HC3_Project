@@ -223,7 +223,7 @@ class Home extends React.Component {
               <ListItem
                 button
                 className="nav-item"
-                onClick={()=> window.open("https://google.com", "_blank")} //todo make the help open our demo video
+                onClick={()=> window.open("https://youtu.be/u0aPEwtsk-s", "_blank")} //todo make the help open our demo video
               >
                 <Avatar>?</Avatar>
                 <ListItemText className="nav-item-text" primary="Help" />
