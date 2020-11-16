@@ -66,27 +66,27 @@ class Home extends React.Component {
       showDialog: false,
       nameInputField: "",
       selectedTeamId: "",
-      bookings: this.props.bookings,
+      events: this.props.bookings.map(function(b){
+        var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
+        var end = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
+        return {
+          'title': b.name,
+          'start': start,
+          'end': new Date(end.getTime() + (30 * 60 * 1000))
+        };
+      }),
     };
-    
+    console.log(this.props.bookings.map(function(b){
+      var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
+      return {
+        'title': b.name,
+        'start': start,
+        'end': start.setMinutes(start.getMinutes() + 30)
+      };
+    }));
     this.handleClose = this.handleClose.bind(this);
     this.showDialog = this.showDialog.bind(this);
     this.goToBooking = this.goToBooking.bind(this);
-    this.getCalendarEventsFromBookings = this.getCalendarEventsFromBookings.bind(this);
-  }
-
-  getCalendarEventsFromBookings(){
-    var events = [];
-    for(var i = 0; i < this.state.bookings.length; i++){
-      var b = this.state.bookings[i];
-      var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
-      events.push({
-        title: this.state.bookings[i]['name'],
-        start: start,
-        end: start.setMinutes(start.getMinutes() + 30)
-      })
-    }
-    return events;
   }
 
   handleClose() {
@@ -221,7 +221,7 @@ class Home extends React.Component {
           <div className="center">
           <Calendar
           defaultView="month"
-          events={this.getCalendarEventsFromBookings()}
+          events={this.state.events}
           localizer={localizer}
           onSelectEvent={event => alert(event.title)} //todo open edit event
           style={{ height: "50vh" }}
