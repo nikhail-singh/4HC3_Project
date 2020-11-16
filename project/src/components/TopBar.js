@@ -92,7 +92,7 @@ class TopBar extends React.Component {
                     </Grid>
                     <Grid container justify="center">
                     <IconButton>
-                        <AccountCircle className="icon"/>
+                        <AccountCircle style={{ fontSize: 60, color:"#7A003C"}}/>
                     </IconButton>
                     </Grid>
                     <DialogContent>

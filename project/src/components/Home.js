@@ -350,7 +350,7 @@ class Home extends React.Component {
             <strong>Meeting Description:</strong> {this.state.bookingDesc}
             </DialogContentText>
               <DialogActions>
-            <Button onClick={this.closeBooking} className="cancel-button">
+            <Button onClick={this.closeBooking} className="save-button">
               Close
           </Button>
           </DialogActions>
