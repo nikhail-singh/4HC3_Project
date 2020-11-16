@@ -21,7 +21,7 @@ import {
   InputLabel,
   MenuItem
 } from '@material-ui/core';
-import CreateIcon from '@material-ui/icons/Create';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 class Bookings extends React.Component {
@@ -157,7 +157,10 @@ class Bookings extends React.Component {
                   </TableCell>
                     <TableCell align="center">{row.month}/{row.day}/{row.year}</TableCell>
                     <TableCell align="center">{row.time.slice(0, -2)}:{row.time.slice(-2)}</TableCell>
-                    <TableCell align="center"><CreateIcon id='editIcon' onClick={() => this.edit(row.bookingId)} /><DeleteIcon key={row.bookingId} id='deleteIcon' onClick={() => this.deleteMeeting(row.bookingId)} /></TableCell>
+                    <TableCell align="center">
+                      <Button color="default" id='editIcon' className="action-button" startIcon={<EditIcon />} onClick={() => this.edit(row.bookingId)}>Edit</Button>
+                      <Button color="default" id='deleteIcon' className="action-button" startIcon={<DeleteIcon />} onClick={() => this.deleteMeeting(row.bookingId)}>Delete</Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
