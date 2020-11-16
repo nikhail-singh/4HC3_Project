@@ -7,9 +7,7 @@ import { Drawer,
   Avatar, 
   ListItemText, 
   Grid, 
-  Typography, 
-  Button, 
-  Divider,  
+  Button,  
   Dialog, 
   DialogTitle, 
   DialogContent, 
@@ -30,8 +28,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
-import { bookingDefaults } from '../data/bookingsSample';
-import DateFnsUtils from '@date-io/date-fns';
+
 
 const emptyTeam = {
   name: "",
@@ -67,6 +64,7 @@ class Home extends React.Component {
       showDialog: false,
       nameInputField: "",
       selectedTeamId: "",
+      redirect:false,
       events: this.props.bookings.map(function(b){
         var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
         return {
@@ -205,9 +203,11 @@ class Home extends React.Component {
           <div className="center">
           <Calendar
           defaultView="month"
+          eventPropGetter={event => ({style: {backgroundColor:"maroon", paddingLeft: "10px",}})}
           events={this.state.events}
           localizer={localizer}
-          onSelectEvent={event => alert(event.title)} //todo open edit event
+          onSelectEvent={(event) =>alert(`${event.title} \n Start: ${event.start}\n End: ${event.end}`)}
+          selectable
           style={{ height: "50vh" }}
           ></Calendar>
           </div>
