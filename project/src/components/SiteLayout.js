@@ -10,7 +10,7 @@ import { bookingDefaults } from '../data/bookingsSample';
 
 import './SiteLayout.css';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Redirect
