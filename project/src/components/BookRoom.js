@@ -4,8 +4,8 @@ import { Container, Grid, Typography, Hidden } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
+  TimePicker,
+  DatePicker,
 } from '@material-ui/pickers';
 import withSizes from 'react-sizes'
 import DateFnsUtils from '@date-io/date-fns';
@@ -244,7 +244,7 @@ class BookRoom extends React.Component {
         <Typography align="center" variant='body2' gutterBottom >To get started, select a date and time then click on an available room.</Typography>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-evenly">
-            <KeyboardDatePicker
+            <DatePicker
               disableToolbar
               variant="inline"
               format="MM/dd/yyyy"
@@ -257,7 +257,7 @@ class BookRoom extends React.Component {
                 'aria-label': 'change date',
               }}
             />
-            <KeyboardTimePicker
+            <TimePicker
               margin="normal"
               id="time-picker"
               label="Booking Time"
