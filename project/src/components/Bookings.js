@@ -33,10 +33,14 @@ class Bookings extends React.Component {
       showDialog: false,
       nameInputField: "",
       selectedTeamId: "",
+      scopeInputField: "",
+      descriptionInputField: "",
       editing: false,
       editId: 0,
+      showDeleteDialog: false
     };
-    this.handleClose = this.handleClose.bind(this);
+    this.handleCloseEdit = this.handleCloseEdit.bind(this);
+    this.handleCloseDelete = this.handleCloseDelete.bind(this);
     this.showDialog = this.showDialog.bind(this);
     this.goToEditBooking = this.goToEditBooking.bind(this);
     this.goToNewBooking = this.goToNewBooking.bind(this);
@@ -52,10 +56,12 @@ class Bookings extends React.Component {
     }
   }
 
-  handleClose() {
+  handleCloseEdit() {
     this.setState({
       nameInputField: "",
       selectedTeamId: "",
+      scopeInputField: "",
+      descriptionInputField: "",
       showDialog: false,
       editing: false,
       editId: null
@@ -76,8 +82,8 @@ class Bookings extends React.Component {
     if (!this.state.selectedTeamId || !this.state.nameInputField){
       alert("Please fill out both the team ID and meeting name.")
     }else{
-      this.handleClose()
-      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField, false, 0)
+      this.handleCloseEdit()
+      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField, this.state.scopeInputField, this.state.descriptionInputField, false, 0)
     }
   }
 
@@ -85,8 +91,8 @@ class Bookings extends React.Component {
     if (!this.state.selectedTeamId || !this.state.nameInputField){
       alert("Please fill out both the team ID and meeting name.")
     }else{
-      this.handleClose()
-      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField, true, this.state.editId)
+      this.handleCloseEdit()
+      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField, this.state.scopeInputField, this.state.descriptionInputField, true, this.state.editId)
     }
   }
 
@@ -99,14 +105,15 @@ class Bookings extends React.Component {
         if(bookings[i]['bookingId'] === this.state.editId){
           bookings[i]['name'] = this.state.nameInputField;
           bookings[i]['teamId'] = this.state.selectedTeamId;
+          bookings[i]['scope'] = this.state.scopeInputField;
+          bookings[i]['description'] = this.state.descriptionInputField;
           break;
         }
       }
-      console.log(bookings)
       this.setState({
         bookings: bookings
       })
-      this.handleClose()
+      this.handleCloseEdit()
     }
   }
 
@@ -116,6 +123,8 @@ class Bookings extends React.Component {
     this.setState({
       nameInputField: editBooking.name,
       selectedTeamId: editBooking.teamId,
+      scopeInputField: editBooking.scope,
+      descriptionInputField: editBooking.description,
       editing: true,
       editId: bookingId,
       showDialog: true
@@ -167,7 +176,7 @@ class Bookings extends React.Component {
             </Table>
           </TableContainer>
         </Container>
-        <Dialog open={this.state.showDialog} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <Dialog open={this.state.showDialog} onClose={this.handleCloseEdit} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Book A Meeting</DialogTitle>
           <DialogContent>
             <DialogContentText>
@@ -197,9 +206,29 @@ class Bookings extends React.Component {
                 <MenuItem value={team.id} key={team.id}>{team.name}</MenuItem>
               )}
             </Select>
+            <TextField
+              id="input-scope"
+              label="Meeting Scope (Optional)"
+              type="text"
+              margin='normal'
+              name='scopeInputField'
+              onChange={e => this.handleModalChange(e)}
+              value={this.state.scopeInputField}
+              fullWidth
+            />
+            <TextField
+              id="input-desc"
+              label="Meeting Description (Optional)"
+              type="text"
+              margin='normal'
+              name='descriptionInputField'
+              onChange={e => this.handleModalChange(e)}
+              value={this.state.descriptionInputField}
+              fullWidth
+            />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} className='cancel-button'>
+            <Button onClick={this.handleCloseEdit} className='cancel-button'>
               Cancel
           </Button>
           {this.state.editing ? <Button onClick={this.saveEditChanges} className='save-button'>Save Change</Button> : ''}

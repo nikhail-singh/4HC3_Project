@@ -94,6 +94,8 @@ class SiteLayout extends React.Component {
     if(!this.state.editing){
       bookings.push({
         name: this.state.newMeetingName,
+        scope: this.state.newMeetingScope,
+        description: this.state.newMeetingDescription,
         year: year,
         month: month,
         day: day,
@@ -108,6 +110,8 @@ class SiteLayout extends React.Component {
       for(var i = 0; i < bookings.length; i++){
         if(bookings[i]['bookingId'] === this.state.editId){
           bookings[i]['name'] = this.state.newMeetingName;
+          bookings[i]['scope'] = this.state.newMeetingScope;
+          bookings[i]['description'] = this.state.newMeetingDescription;
           bookings[i]['teamId'] = this.state.selectedTeamId;
           bookings[i]['room'] = room;
           bookings[i]['time'] = time;
@@ -128,11 +132,13 @@ class SiteLayout extends React.Component {
     })
   }
 
-  readyToBook(selectedTeamId, newMeetingName, editing, editId){
+  readyToBook(selectedTeamId, newMeetingName, scope, description, editing, editId){
     this.setState({
       showBookings: true,
       selectedTeamId: selectedTeamId,
-      newMeetingName: newMeetingName
+      newMeetingName: newMeetingName,
+      newMeetingScope: scope,
+      newMeetingDescription: description
     })
     if(!editing){
       this.setState({
