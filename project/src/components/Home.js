@@ -70,7 +70,8 @@ class Home extends React.Component {
         return {
           'title': b.name,
           'start': start,
-          'end': new Date(start.getTime() + (30 * 60 * 1000))
+          'end': new Date(start.getTime() + (30 * 60 * 1000)),
+          'bookingId': b.bookingId
         };
       }),
     };
@@ -151,6 +152,14 @@ class Home extends React.Component {
   showDialog() {
     this.setState({ showDialog: true })
   }
+
+  // Show selected booking information clicked on from the calendar...
+  showBookingInformationModal(bookingId){
+    const showingBooking = this.props.bookings.find(b => b.bookingId === bookingId);
+    // Do your modal logig and stuff here
+    console.log(showingBooking)
+  }
+
   render() {
     return (
         <div className='root'>
@@ -206,7 +215,7 @@ class Home extends React.Component {
           eventPropGetter={event => ({style:{backgroundColor:"#7A003C", color:"white", paddingLeft: "10px",}})}
           events={this.state.events}
           localizer={localizer}
-          onSelectEvent={(event) =>alert(`${event.title} \n Start: ${event.start}\n End: ${event.end}`)}
+          onSelectEvent={(event) => this.showBookingInformationModal(event.bookingId)}
           selectable
           style={{ height: "50vh" }}
           ></Calendar>
