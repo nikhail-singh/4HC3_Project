@@ -69,11 +69,10 @@ class Home extends React.Component {
       selectedTeamId: "",
       events: this.props.bookings.map(function(b){
         var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
-        var end = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
         return {
           'title': b.name,
           'start': start,
-          'end': new Date(end.getTime() + (30 * 60 * 1000))
+          'end': new Date(start.getTime() + (30 * 60 * 1000))
         };
       }),
     };
