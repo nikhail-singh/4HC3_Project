@@ -16,9 +16,10 @@
 }
 .icon {
     padding-left: 0px !important; 
-    color: #B22222;
-    width:50px;
-    height:50px;
+    background-color: #B22222;
+    color:"black";
+    width:100px;
+    height:100px;
 }
 .title{
     margin-right: 10px !important;

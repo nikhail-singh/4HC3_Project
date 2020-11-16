@@ -7,6 +7,7 @@ export var bookingDefaults = [
         time: '800',
         teamId: '0',
         room: '201',
-        bookingId: 0
+        bookingId: 0,
+        description: "This is a test booking"
     }
 ]

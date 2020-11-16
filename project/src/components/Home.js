@@ -60,11 +60,19 @@ class Home extends React.Component {
       teamPopupTitle: "",
       teamPopupEdit: false,
       teamPopupCurrent: false,
+      eventPopup:false,
       teamPopupSave: this.saveTeamChanges.bind(this),
       showDialog: false,
+      scopeInputField: "",
+      descriptionInputField: "",
       nameInputField: "",
       selectedTeamId: "",
-      redirect:false,
+      bookingTitle: "",
+      bookingStart: "",
+      bookingEnd:"",
+      bookingScope:"",
+      bookingDesc:"",
+      bookingRoom:"",
       events: this.props.bookings.map(function(b){
         var start = new Date(b.month + '/' + b.day + '/' + b.year + ' ' + b.time.slice(0, -2) + ':' + b.time.slice(-2));
         return {
@@ -76,6 +84,8 @@ class Home extends React.Component {
       }),
     };
     this.handleClose = this.handleClose.bind(this);
+    this.showBookingInformationModal = this.showBookingInformationModal.bind(this);
+    this.closeBooking = this.closeBooking.bind(this);
     this.showDialog = this.showDialog.bind(this);
     this.goToBooking = this.goToBooking.bind(this);
   }
@@ -84,6 +94,8 @@ class Home extends React.Component {
     this.setState({
       nameInputField: "",
       selectedTeamId: "",
+      scopeInputField: "",
+      descriptionInputField: "",
       showDialog: false
     })
   }
@@ -98,7 +110,7 @@ class Home extends React.Component {
       alert("Please fill out both the team ID and meeting name.")
     }else{
       this.handleClose()
-      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField)
+      this.props.goToBooking(this.state.selectedTeamId, this.state.nameInputField, this.state.scopeInputField, this.state.descriptionInputField)
     }
   }
 
@@ -156,8 +168,31 @@ class Home extends React.Component {
   // Show selected booking information clicked on from the calendar...
   showBookingInformationModal(bookingId){
     const showingBooking = this.props.bookings.find(b => b.bookingId === bookingId);
-    // Do your modal logig and stuff here
-    console.log(showingBooking)
+    var startTime = new Date(showingBooking.month + '/' + showingBooking.day + '/' + showingBooking.year + ' ' + showingBooking.time.slice(0, -2) + ':' + showingBooking.time.slice(-2));
+    var start =format((startTime.getTime()),"Pp")
+    var end =format((startTime.getTime() + (30 * 60 * 1000)),"Pp");
+
+    this.setState({
+      bookingTitle:showingBooking.name,
+      bookingDesc:showingBooking.description,
+      bookingStart:start,
+      bookingEnd:end,
+      bookingScope:showingBooking.scope,
+      bookingRoom:showingBooking.room
+    },
+    () => console.log(end));
+    this.setState({eventPopup:true})
+  }
+  closeBooking() {
+    this.setState({ 
+      eventPopup:false,
+      bookingEnd:"",
+      bookingStart:"",
+      bookingScope:"",
+      bookingDesc:"",
+      BookingRoom:"",
+      bookingTitle:""
+    })
   }
 
   render() {
@@ -261,15 +296,65 @@ class Home extends React.Component {
                 <MenuItem value={team.id} key={team.id}>{team.name}</MenuItem>
               )}
             </Select>
+            <TextField
+              id="input-scope"
+              label="Meeting Scope (Optional)"
+              type="text"
+              margin='normal'
+              name='scopeInputField'
+              onChange={e => this.handleModalChange(e)}
+              value={this.state.scopeInputField}
+              fullWidth
+            />
+            <TextField
+              id="input-desc"
+              label="Meeting Description (Optional)"
+              type="text"
+              margin='normal'
+              name='descriptionInputField'
+              onChange={e => this.handleModalChange(e)}
+              value={this.state.descriptionInputField}
+              fullWidth
+            />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleClose} className="cancel-button">
               Cancel
           </Button>
-            <Button component={Link} to="/bookings"onClick={this.goToBooking} color="primary">
+            <Button component={Link} to="/bookings"onClick={this.goToBooking} className="save-button">
               Book Room
           </Button>
           </DialogActions>
+        </Dialog>
+        <Dialog open={this.state.eventPopup} onClose={this.closeBooking} aria-labelledby="form-dialog-title"  fullWidth={true} maxWidth="xs">
+        <DialogContent>
+        <Grid container justify="center">
+        <DialogTitle id="form-dialog-title">Booking Information:</DialogTitle>
+        </Grid>
+            <DialogContentText className="event-popup-text">
+                <strong>Meeting Name:</strong> {this.state.bookingTitle}
+            </DialogContentText>
+            <DialogContentText className="event-popup-text">
+                <strong>Meeting Room:</strong> {this.state.bookingRoom}
+            </DialogContentText>
+            <DialogContentText className="event-popup-text">
+            <strong>Meeting Start Time:</strong> {this.state.bookingStart}
+            </DialogContentText>
+            <DialogContentText className="event-popup-text">
+            <strong>Meeting End Time:</strong> {this.state.bookingEnd}
+            </DialogContentText>
+            <DialogContentText className="event-popup-text">
+            <strong>Meeting Scope:</strong> {this.state.bookingScope}
+            </DialogContentText>
+            <DialogContentText className="event-popup-text">
+            <strong>Meeting Description:</strong> {this.state.bookingDesc}
+            </DialogContentText>
+              <DialogActions>
+            <Button onClick={this.closeBooking} className="cancel-button">
+              Close
+          </Button>
+          </DialogActions>
+          </DialogContent>
         </Dialog>
       </div>
     )

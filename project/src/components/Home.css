@@ -20,6 +20,9 @@
     overflow: auto;
 }
 
+.event-popup-text {
+    color:black;
+}
 
 .content {
     flex-grow: 1;
@@ -48,4 +51,9 @@
     margin: auto;
     width: 75%;
     padding: 10px;
+}
+
+.cancel-button{
+    background: white !important;
+    border: 1px solid black !important;
 }
