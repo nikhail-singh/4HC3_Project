@@ -203,7 +203,7 @@ class Home extends React.Component {
           <div className="center">
           <Calendar
           defaultView="month"
-          eventPropGetter={event => ({style: {backgroundColor:"maroon", paddingLeft: "10px",}})}
+          eventPropGetter={event => ({style:{backgroundColor:"#7A003C", color:"white", paddingLeft: "10px",}})}
           events={this.state.events}
           localizer={localizer}
           onSelectEvent={(event) =>alert(`${event.title} \n Start: ${event.start}\n End: ${event.end}`)}
