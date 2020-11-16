@@ -68,6 +68,13 @@ class Bookings extends React.Component {
     })
   }
 
+  handleCloseDelete() {
+    this.setState({
+      showDeleteDialog: false,
+      deleteId: null
+    })
+  }
+
   handleModalChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value
@@ -131,7 +138,15 @@ class Bookings extends React.Component {
     });
   }
 
-  deleteMeeting(bookingId){
+  verifyDeleteMeeting(bookingId){
+    this.setState({
+      showDeleteDialog: true,
+      deleteId: bookingId
+    });
+  }
+
+  deleteMeeting(){
+    var bookingId = this.state.deleteId;
     const removedBooking = this.state.bookings.find(b => b.bookingId === bookingId);
     const bookings = this.state.bookings.filter(b => b.bookingId !== bookingId);
     this.setState({
@@ -139,6 +154,7 @@ class Bookings extends React.Component {
     });
     this.props.updateBookings(bookings);
     this.props.toggleRoomAvailability(removedBooking.year, removedBooking.month, removedBooking.day, removedBooking.time, removedBooking.room);
+    this.handleCloseDelete();
   }
 
   render() {
@@ -168,7 +184,7 @@ class Bookings extends React.Component {
                     <TableCell align="center">{row.time.slice(0, -2)}:{row.time.slice(-2)}</TableCell>
                     <TableCell align="center">
                       <Button color="default" id='editIcon' className="action-button" startIcon={<EditIcon />} onClick={() => this.edit(row.bookingId)}>Edit</Button>
-                      <Button color="default" id='deleteIcon' className="action-button" startIcon={<DeleteIcon />} onClick={() => this.deleteMeeting(row.bookingId)}>Delete</Button>
+                      <Button color="default" id='deleteIcon' className="action-button" startIcon={<DeleteIcon />} onClick={() => this.verifyDeleteMeeting(row.bookingId)}>Delete</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -233,6 +249,32 @@ class Bookings extends React.Component {
           </Button>
           {this.state.editing ? <Button onClick={this.saveEditChanges} className='save-button'>Save Change</Button> : ''}
           {this.state.editing ? <Button onClick={this.goToEditBooking} className='save-button'>Modify Room</Button> : <Button onClick={this.goToNewBooking} className='save-button'>Book Room</Button>}
+          </DialogActions>
+        </Dialog>
+        <Dialog open={this.state.showDeleteDialog} onClose={this.handleCloseEdit} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Are You Sure?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this meeting? If not you can canel and Edit the meeting instead.
+            </DialogContentText>
+            <DialogContentText>
+              If you do want to cancel the meeting, add notes to send to your team. This could include reason for cancellation or next steps! Don't worry, we'll notify your entire team for you and delive your message.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              id="input-name"
+              label="Cancelation Notes (Optional)"
+              type="text"
+              margin='normal'
+              name='cancelationInputField'
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseDelete} className='cancel-button'>
+              Cancel
+            </Button>
+            <Button onClick={this.deleteMeeting} className='save-button'>Yes, Delete</Button>
           </DialogActions>
         </Dialog>
       </>
